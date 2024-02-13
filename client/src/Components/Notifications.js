@@ -22,7 +22,9 @@ function Notifications({notifications, reloadNotifications, showNotifications, s
                 message.success(response.message);
                 reloadNotifications();
             }else{
-                throw new Error(response.message);
+                localStorage.removeItem('token');
+                navigate('/login');
+                message.error(response.message);
             }
         } catch (error) {
             dispatch(SetLoader(false));

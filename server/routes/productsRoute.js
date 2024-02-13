@@ -40,7 +40,7 @@ router.post("/add-product", authMiddleware, async (req, res) => {
 });
 
 // get all products
-router.post("/get-products", async (req, res) => {
+router.post("/get-products", authMiddleware, async (req, res) => {
     try {
         const {seller, category = [], age = [], status = "", name = ""} = req.body;
         let filters = {};
@@ -121,7 +121,7 @@ router.get("/get-product-by-id/:id", authMiddleware, async (req,res) =>{
         success:true,
         data:product,
      });
-   } catch (error) {
+   }catch (error) {
      res.send({
         success:false,
         message:error.message,
@@ -132,7 +132,23 @@ router.get("/get-product-by-id/:id", authMiddleware, async (req,res) =>{
 // edit a product
 router.put("/edit-product/:id", authMiddleware, async (req, res) => {
     try {
+        const {seller} = req.body;
+        const sellerDetails = await User.findById(seller);
         await Product.findByIdAndUpdate(req.params.id, req.body);
+
+        // send notifications to admins
+        const admins = await User.find({role : 'admin'});
+        admins.forEach(async (admin) => {
+            const newNotification = new Notification({
+                user: admin._id,
+                message: `Product updated by ${sellerDetails.name}`,
+                onClick: "/admin",
+                title: "Updated Product",
+                read: false,
+            })
+            await newNotification.save();
+        });
+
         res.send({
             success:true,
             message:"Product Updated Successfully",

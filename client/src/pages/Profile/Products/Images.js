@@ -3,6 +3,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { SetLoader } from '../../../redux/loadersSlice';
 import { EditProduct, UploadProductImage } from '../../../apicalls/products';
+import {useNavigate} from "react-router-dom";
 
 function Images({selectedProduct, setShowProductForm, getData}) {
 
@@ -11,6 +12,8 @@ function Images({selectedProduct, setShowProductForm, getData}) {
   const [showPreview, setShowPreview] = React.useState(true);
   const [images, setImages] = React.useState(selectedProduct.images);
   const [file, setFile] = React.useState(null);
+
+  const navigate = useNavigate();
 
   const upload = async () => {
       try {
@@ -28,6 +31,8 @@ function Images({selectedProduct, setShowProductForm, getData}) {
           setFile(null);
           getData();
         }else{
+          localStorage.removeItem('token');
+          navigate('/login');
           message.error(response.message);
         }
       } catch (error) {
@@ -49,6 +54,8 @@ function Images({selectedProduct, setShowProductForm, getData}) {
           setFile(null);
           getData();
         }else{
+          localStorage.removeItem('token');
+          navigate("/login");
           message.error(response.message);
         }
      } catch (error) {

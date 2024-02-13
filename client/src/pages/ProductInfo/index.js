@@ -29,6 +29,10 @@ function ProductInfo() {
       if(response.success){
         const bidsResponse = await GetAllBids({product : id});
         setProduct({...response.data, bids : bidsResponse.data});
+      }else{
+        localStorage.removeItem('token');
+        navigate("/login");
+        message.error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false));

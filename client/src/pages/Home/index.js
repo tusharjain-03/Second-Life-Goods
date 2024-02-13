@@ -32,6 +32,10 @@ function Home() {
       dispatch(SetLoader(false));
       if(response.success){
         setProducts(response.data);
+      }else{
+        localStorage.removeItem('token');
+        navigate("/login");
+        message.error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false));

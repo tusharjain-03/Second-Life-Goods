@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SetLoader } from '../../redux/loadersSlice';
 import { PlaceNewBid } from '../../apicalls/products';
 import { AddNotification } from '../../apicalls/notifications';
+import { useNavigate } from 'react-router-dom';
 
 function BidModal({
     showBidModal,
@@ -16,6 +17,8 @@ function BidModal({
   const dispatch = useDispatch();
 
   const formRef = React.useRef(null);
+
+  const navigate = useNavigate();
 
   const rules = [{required:"true", message:"required"}];
 
@@ -43,7 +46,9 @@ function BidModal({
          reloadData();
          setShowBidModal(false);
        }else{
-         throw new Error(response.message);
+         localStorage.removeItem('token');
+         navigate('/login');
+         message.error(response.message);
        }
      } catch (error) {
        dispatch(SetLoader(false));

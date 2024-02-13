@@ -3,6 +3,7 @@ import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import {GetAllBids} from "../../../apicalls/products";
 import {SetLoader} from "../../../redux/loadersSlice";
+import { useNavigate } from 'react-router-dom';
 import moment from "moment";
 
 function UserBids() {
@@ -12,6 +13,8 @@ function UserBids() {
   const {user} = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const getData = async () => {
     try {
         dispatch(SetLoader(true));
@@ -19,6 +22,10 @@ function UserBids() {
         dispatch(SetLoader(false));
         if(response.success){
           setBids(response.data);
+        }else{
+            localStorage.removeItem('token');
+            navigate('/login');
+            message.error(response.message);
         }
     } catch (error) {
         dispatch(SetLoader(false));

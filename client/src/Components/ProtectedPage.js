@@ -8,7 +8,7 @@ import { SetUser } from '../redux/usersSlice';
 import Notifications from './Notifications';
 import { GetAllNotifications, ReadAllNotifications } from '../apicalls/notifications';
 
-function ProtectedPage({children}) {
+function ProtectedPage(props) {
   const {user} = useSelector(state => state.users);
 
   const [notifications, setNotifications] = React.useState([]);
@@ -25,6 +25,7 @@ function ProtectedPage({children}) {
         if(response.success){
             dispatch(SetUser(response.data));
         }else{
+            localStorage.removeItem('token');
             navigate("/login");
             message.error(response.message);
         }
@@ -41,7 +42,9 @@ function ProtectedPage({children}) {
          if(response.success){
             setNotifications(response.data);
          }else{
-            throw new Error(response.message);
+            localStorage.removeItem('token');
+            navigate('/login');
+            message.error(response.message);
          }
       } catch (error) {
          message.error(error.message);
@@ -54,7 +57,9 @@ function ProtectedPage({children}) {
          if(response.success){
             getNotifications();
          }else{
-            throw new Error(response.message);
+            localStorage.removeItem('token');
+            navigate("/login");
+            message.error(response.message);
          }
       } catch (error) {
          message.error(error.message);
@@ -104,7 +109,7 @@ function ProtectedPage({children}) {
         </div>
 
         {/* Body */}
-        <div className="p-5">{children}</div>
+        <div className="p-5">{props.children}</div>
 
         {showNotifications && <Notifications notifications={notifications} reloadNotifications={getNotifications} showNotifications={showNotifications} setShowNotifications={setShowNotifications}/>}
     </div>

@@ -7,6 +7,7 @@ import {GetProducts} from '../../../apicalls/products';
 import {useEffect} from 'react';
 import {DeleteProduct} from '../../../apicalls/products';
 import Bids from './Bids';
+import {useNavigate} from 'react-router-dom';
 const moment = require("moment");
 
 function Products() {
@@ -23,6 +24,8 @@ function Products() {
 
   const {user} = useSelector((state) => state.users);
 
+  const navigate = useNavigate();
+
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
@@ -30,6 +33,10 @@ function Products() {
       dispatch(SetLoader(false));
       if(response.success){
          setProducts(response.data);
+      }else{
+        localStorage.removeItem('token');
+        navigate('/login');
+        message.error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -46,6 +53,8 @@ function Products() {
         message.success(response.message);
         getData();
       }else{
+        localStorage.removeItem('token');
+        navigate("/login");
         message.error(response.message);
       }
     } catch (error) {

@@ -20,7 +20,7 @@ const categories = [
     },
     {
         name:"Books",
-        value:"Books",
+        value:"books",
     }
 ];
 

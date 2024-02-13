@@ -5,10 +5,13 @@ import { SetLoader } from '../../../redux/loadersSlice';
 import { GetAllBids } from '../../../apicalls/products';
 import moment from "moment";
 import Divider from "../../../Components/Divider";
+import {useNavigate} from 'react-router-dom';
 
 function Bids({showBidsModal, setShowBidsModal, selectedProduct}) {
 
   const [bids, setBids] = React.useState([]);
+
+  const navigate = useNavigate();
   
   const dispatch = useDispatch();
 
@@ -19,6 +22,10 @@ function Bids({showBidsModal, setShowBidsModal, selectedProduct}) {
         dispatch(SetLoader(false));
         if(response.success){
           setBids(response.data);
+        }else{
+          localStorage.removeItem('token');
+          navigate('/login');
+          message.error(response.message);
         }
     } catch (error) {
         dispatch(SetLoader(false));

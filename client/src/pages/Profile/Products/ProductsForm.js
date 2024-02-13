@@ -4,6 +4,7 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { SetLoader } from '../../../redux/loadersSlice';
 import { AddProduct, EditProduct } from '../../../apicalls/products';
+import {useNavigate} from 'react-router-dom';
 import Images from './Images.js';
 
 const additionalThings = [
@@ -40,11 +41,15 @@ function ProductsForm({showProductForm, setShowProductForm, selectedProduct, get
   const [selectedTab, setSelectedTab] = React.useState("1");
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const onFinish = async (values) => {
      try {
        dispatch(SetLoader(true));
        let response = null;
        if(selectedProduct){
+         values.seller = user._id;
+         values.status = "pending";
          response = await EditProduct(selectedProduct._id, values);
        }else{
          values.seller = user._id;
@@ -57,6 +62,8 @@ function ProductsForm({showProductForm, setShowProductForm, selectedProduct, get
          getData();
          setShowProductForm(false);
        }else{
+         localStorage.removeItem('token');
+         navigate('/login');
          message.error(response.message);
        }
      } catch (error) {

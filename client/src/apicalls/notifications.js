@@ -13,6 +13,7 @@ export const AddNotification = async (data) => {
 // get all notifications by user
 export const GetAllNotifications = async () => {
     try {
+        axiosInstance.defaults.headers['authorization'] = `Bearer ${localStorage.getItem("token")}`;
         const response = await axiosInstance.get("/api/notifications/get-all-notifications");
         return response.data;
     } catch (error) {
@@ -23,6 +24,7 @@ export const GetAllNotifications = async () => {
 // delete a notification
 export const DeleteNotification = async (id) => {
    try {
+     axiosInstance.defaults.headers['authorization'] = `Bearer ${localStorage.getItem("token")}`;
      const response = await axiosInstance.delete(`/api/notifications/delete-notification/${id}`);
      return response.data;
    } catch (error) {
@@ -33,6 +35,7 @@ export const DeleteNotification = async (id) => {
 // read all notifications
 export const ReadAllNotifications = async () => {
    try {
+     axiosInstance.defaults.headers['authorization'] = `Bearer ${localStorage.getItem("token")}`;
      const response = await axiosInstance.put("/api/notifications/read-all-notifications");
      return response.data;
    } catch (error) {

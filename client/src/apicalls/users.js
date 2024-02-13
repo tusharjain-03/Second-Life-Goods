@@ -23,6 +23,7 @@ export const LoginUser = async (payload) => {
 // get current user
 export const GetCurrentUser = async () => {
     try{
+        axiosInstance.defaults.headers['authorization'] = `Bearer ${localStorage.getItem("token")}`;
         const response = await axiosInstance.get("/api/users/get-current-user");
         return response.data;
     }catch(error){
@@ -33,6 +34,7 @@ export const GetCurrentUser = async () => {
 // get all users
 export const GetAllUsers = async () => {
     try {
+        axiosInstance.defaults.headers['authorization'] = `Bearer ${localStorage.getItem("token")}`;
         const response = await axiosInstance.get("/api/users/get-users");
         return response.data;
     } catch (error) {
@@ -43,6 +45,7 @@ export const GetAllUsers = async () => {
 // update user status
 export const UpdateUserStatus = async (id, status) => {
     try {
+        axiosInstance.defaults.headers['authorization'] = `Bearer ${localStorage.getItem("token")}`;
         const response = await axiosInstance.put(`/api/users/update-user-status/${id}`, {status});
         return response.data;
     } catch (error) {

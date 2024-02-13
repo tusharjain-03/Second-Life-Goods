@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {SetLoader} from '../../redux/loadersSlice';
 import {GetAllUsers, UpdateUserStatus} from '../../apicalls/users';
 import {useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 const moment = require("moment");
 
 function Users() {
@@ -12,6 +13,8 @@ function Users() {
 
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
@@ -19,6 +22,10 @@ function Users() {
       dispatch(SetLoader(false));
       if(response.success){
          setUsers(response.data);
+      }else{
+         localStorage.removeItem('token');
+         navigate("/login");
+         message.error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -35,6 +42,8 @@ function Users() {
             message.success(response.message);
             getData();
         }else{
+            localStorage.removeItem('token');
+            navigate('/login');
             message.error(response.message);
         }
       } catch (error) {
